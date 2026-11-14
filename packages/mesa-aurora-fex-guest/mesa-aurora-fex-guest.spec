@@ -10,9 +10,9 @@
 #            --define 'host_release 0.12.aurora.borealis.<12-hex>%%{?dist}' ...
 # Both lines provide mesa-dri-drivers and mesa-vulkan-drivers at their own
 # version-release, which is what this package requires.
-%{!?commit:%global commit bbad52187b6086375806e2430f605fbe70c1c78d}
+%{!?commit:%global commit 3b3e6a2e082004b5240c5a00a94fbebbd44ca15f}
 %{!?host_version:%global host_version 26.3.0}
-%{!?host_release:%global host_release 28%{?dist}.aurora}
+%{!?host_release:%global host_release 29%{?dist}.aurora}
 %global debug_package %{nil}
 # Fedora's x86_64 build flags carry -m64 and would turn the i686 build into a
 # second x86_64 one; meson's release buildtype sets the optimisation instead.
@@ -199,6 +199,32 @@ fi
 %{_presetdir}/80-aurora-fex-mesa.preset
 
 %changelog
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29
+- Pin aurora-silicon/mesa cts/b9-rc29 3b3e6a2e082 (16 first-parent commits since bbad52187b6):
+  - Neo b9 candidate = Mesa -29 release tree: aurora-wip 5fe9c10c6f9 +
+    pr346 pr351 (3b3e6a2e082)
+  - mesa#342 agx: G17P ray queries: skip the sweep for threads that
+    launched nothing, store launch state once per thread
+  - mesa#349 asahi: select native RT capabilities without an environment
+    switch
+  - mesa#348 asahi: enable implemented GPU paths without feature opt-ins
+  - mesa#340 hk: alternate the G17P buffer fill's sweep direction
+  - mesa#339 hk: upload plain G17P tiled images in memory order
+  - mesa#300 hk: VK_EXT_attachment_feedback_loop_dynamic_state
+  - mesa#319 agx, hk: M4 Pro compute fixes (pack_64_4x16, f32 rsqrt
+    widening, cooperative matrix default on G17P)
+  - mesa#338 hk: advertise VK_EXT_nested_command_buffer on G17S
+  - mesa#341 hk: encode only the leaf jobs in AGX3 AS updates
+  - mesa#335 hk: G17P: skip the mesh row decode for grids that fit one
+    launch
+  - mesa#336 Reapply #327 and #328 (the AS CTS crash is pre-existing)
+  - mesa#334 Revert #328 and #327 pending an AS CTS crash attribution
+  - mesa#320 hk: fix stores to one-layer array views of compressed images
+    on M5
+  - mesa#328 vulkan, hk: use the shuffle neighbour search for small H-PLOC
+    builds
+  - mesa#327 hk: unroll the AGX3 envelope's descriptor loops
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-28
 - Pin aurora-silicon/mesa aurora-wip bbad52187b6 (20 first-parent commits since f54acc022c8):
   - mesa#315 hk: mesh and task shaders by default on G17P
