@@ -144,8 +144,8 @@ def main():
     if args.output.exists():
         parser.error('output exists')
     import updatelib as lib
-    releases = [r for page in lib.gh_api(f'repos/{args.repository}/releases?per_page=100', paginate=True)
-                for r in page]
+    # Small pages (lib.releases): one page of 100 releases with all their assets times out.
+    releases = list(lib.releases(args.repository))
     scratch = args.output.with_name(args.output.name + '-metadata')
 
     def fetch(tag, name, directory):
