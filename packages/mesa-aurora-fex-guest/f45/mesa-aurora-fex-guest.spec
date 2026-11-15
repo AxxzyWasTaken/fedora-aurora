@@ -13,7 +13,7 @@
 # version-release, which is what this package requires.
 %{!?commit:%global commit 3b511dc1592c94b6048e97499e1d3236a7505061}
 %{!?host_version:%global host_version 26.3.0}
-%{!?host_release:%global host_release 29%{?dist}.aurora}
+%{!?host_release:%global host_release 29.1.nolto%{?dist}.aurora}
 %{!?host_epoch:%global host_epoch 1}
 %global debug_package %{nil}
 # Fedora's x86_64 build flags carry -m64 and would turn the i686 build into a
@@ -202,6 +202,10 @@ fi
 %{_presetdir}/80-aurora-fex-mesa.preset
 
 %changelog
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29.1.nolto
+- DIAGNOSTIC, do not merge: Release follows mesa-aurora
+  26.3.0-29.1.nolto (lockstep); no other change.
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29
 - Pin aurora-silicon/mesa cts/b10-rc29 3b511dc1592 (17 first-parent commits since bbad52187b6):
   - hk: G17P: place large unlinked vertex shaders' varyings when linking

@@ -1,9 +1,11 @@
 %global commit 3b511dc1592c94b6048e97499e1d3236a7505061
 %global debug_package %{nil}
+# DIAGNOSTIC (do not merge): LTO off, for the A/B of the in-context mesh with_i16 task_mesh family.
+%global _lto_cflags %{nil}
 Name: mesa-aurora
 Epoch: 1
 Version: 26.3.0
-Release: 29%{?dist}.aurora
+Release: 29.1.nolto%{?dist}.aurora
 Summary: Aurora Asahi OpenGL and Vulkan drivers
 License: MIT
 URL: https://github.com/aurora-silicon/mesa
@@ -202,6 +204,11 @@ strings %{buildroot}%{_libdir}/libvulkan_asahi.so | grep -F "Mesa " | grep -F "(
 %{_libdir}/libRusticlOpenCL.so
 
 %changelog
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29.1.nolto
+- DIAGNOSTIC, do not merge: -29's commit 3b511dc1592 built with LTO off
+  (%%_lto_cflags empty), for an A/B of the in-context mesh with_i16
+  task_mesh family. Otherwise identical to 26.3.0-29.
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29
 - Pin aurora-silicon/mesa cts/b10-rc29 3b511dc1592 (17 first-parent commits since bbad52187b6):
   - hk: G17P: place large unlinked vertex shaders' varyings when linking
