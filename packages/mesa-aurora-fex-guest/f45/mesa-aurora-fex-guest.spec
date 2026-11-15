@@ -11,9 +11,9 @@
 #            --define 'host_release 0.12.aurora.borealis.<12-hex>%%{?dist}' ...
 # Both lines provide mesa-dri-drivers and mesa-vulkan-drivers at their own
 # version-release, which is what this package requires.
-%{!?commit:%global commit 3b511dc1592c94b6048e97499e1d3236a7505061}
+%{!?commit:%global commit d4ad4a4dce6d1d23ecd897d6d73fadf9ab618614}
 %{!?host_version:%global host_version 26.3.0}
-%{!?host_release:%global host_release 29%{?dist}.aurora}
+%{!?host_release:%global host_release 30%{?dist}.aurora}
 %{!?host_epoch:%global host_epoch 1}
 %global debug_package %{nil}
 # Fedora's x86_64 build flags carry -m64 and would turn the i686 build into a
@@ -202,6 +202,15 @@ fi
 %{_presetdir}/80-aurora-fex-mesa.preset
 
 %changelog
+* Sun Nov 15 2026 Diljit Singh <hey@djdev.me> - 26.3.0-30
+- Pin aurora-silicon/mesa cts/b11-rc30 d4ad4a4dce6 (3 first-parent commits since 3b511dc1592):
+  - st/mesa: reject links mixing GLSL and SPIR-V shaders in either order
+    (d4ad4a4dce6)
+  - mesa: a SPIR-V shader given GLSL source is no longer compiled
+    (70018200ff9)
+  - mesa: don't let a compile free shader state another context is linking
+    (737fc35f257)
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29
 - Pin aurora-silicon/mesa cts/b10-rc29 3b511dc1592 (17 first-parent commits since bbad52187b6):
   - hk: G17P: place large unlinked vertex shaders' varyings when linking

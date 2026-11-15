@@ -1,8 +1,8 @@
-%global commit 3b511dc1592c94b6048e97499e1d3236a7505061
+%global commit d4ad4a4dce6d1d23ecd897d6d73fadf9ab618614
 %global debug_package %{nil}
 Name: mesa-aurora
 Version: 26.3.0
-Release: 29%{?dist}.aurora
+Release: 30%{?dist}.aurora
 Summary: Aurora Asahi OpenGL and Vulkan drivers
 License: MIT
 URL: https://github.com/aurora-silicon/mesa
@@ -200,6 +200,15 @@ strings %{buildroot}%{_libdir}/libvulkan_asahi.so | grep -F "Mesa " | grep -F "(
 %{_libdir}/libRusticlOpenCL.so
 
 %changelog
+* Sun Nov 15 2026 Diljit Singh <hey@djdev.me> - 26.3.0-30
+- Pin aurora-silicon/mesa cts/b11-rc30 d4ad4a4dce6 (3 first-parent commits since 3b511dc1592):
+  - st/mesa: reject links mixing GLSL and SPIR-V shaders in either order
+    (d4ad4a4dce6)
+  - mesa: a SPIR-V shader given GLSL source is no longer compiled
+    (70018200ff9)
+  - mesa: don't let a compile free shader state another context is linking
+    (737fc35f257)
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29
 - Pin aurora-silicon/mesa cts/b10-rc29 3b511dc1592 (17 first-parent commits since bbad52187b6):
   - hk: G17P: place large unlinked vertex shaders' varyings when linking
