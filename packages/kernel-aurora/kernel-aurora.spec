@@ -1,4 +1,4 @@
-%global commit d89d8c0ce7549460cd94d49dfe3b599577edc849
+%global commit 9125b31475836ce0a6634df45b539c6d604f36a5
 %global krel %{version}-%{release}.aarch64
 %global debug_package %{nil}
 # modules_install signs every module (CONFIG_MODULE_SIG_ALL) after
@@ -14,7 +14,7 @@
 %global ctxr_execmem 1
 Name: kernel-aurora
 Version: 7.3.0
-Release: 38%{?dist}.aurora
+Release: 40%{?dist}.aurora
 Summary: Aurora kernel for Apple Silicon Macs
 License: GPL-2.0-only
 URL: https://github.com/aurora-silicon/linux
@@ -172,6 +172,26 @@ fi
 %{_docdir}/aurora-userpages/
 
 %changelog
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 7.3.0-40
+- Pin cand/7.3.0-40 9125b314, the MacBook Neo (J700) rig's release
+  candidate kernel (qualified on hardware first); 2 first-parent commits
+  after be8d4cd1:
+  - drm/asahi: g17: give back the pool pages of kept render graphs
+  - drm/asahi: g17: let a refused render take back idle render pools
+
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 7.3.0-39
+- Pin integration/aurora be8d4cd1, the MacBook Neo (J700) rig's release
+  candidate kernel (qualified on hardware first); 5 first-parent commits
+  after d89d8c0c:
+  - linux#1892 drm/asahi: g17: G17P cross-queue sync fast paths and compute
+    MCache tables
+  - linux#1896 dt-bindings: phy: ti,cd2e22: give apple,tunable the type its
+    other users have
+  - linux#1901 tools/asahi: stop a timed-out host test's whole process group
+  - linux#1926 drm/asahi: g17: say why the watchdog gave up on a command
+  - linux#1925 drm/asahi: g17: do not report a closed client's unfinished
+    work as a lost device
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 7.3.0-38
 - Pin integration/aurora d89d8c0c, the MacBook Neo (J700) rig's release
   candidate kernel (qualified on hardware first); 43 first-parent commits
