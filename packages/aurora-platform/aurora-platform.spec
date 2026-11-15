@@ -3,7 +3,7 @@
 
 Name: aurora-platform
 Version: 44
-Release: 39%{?dist}
+Release: 40%{?dist}
 Summary: Aurora Apple Silicon hardware stack
 License: MIT
 URL: https://github.com/aurora-silicon/fedora-aurora
@@ -44,6 +44,7 @@ Source122: aurora-kdump.service.conf
 Source123: aurora-kdump-setup
 Source124: aurora-kdump-clock-module-setup.sh
 Source125: aurora-kdump-clock.sh
+Source126: aurora-t6041-power.service
 
 %description
 Aurora Apple Silicon hardware stack.
@@ -161,6 +162,11 @@ install -Dm755 %{SOURCE113} %{buildroot}%{_libexecdir}/aurora/aurora-ppd-config
 install -Dm755 %{SOURCE115} %{buildroot}%{_libexecdir}/aurora/aurora-wake-for-network
 install -Dm644 %{SOURCE116} %{buildroot}%{_udevrulesdir}/63-aurora-wake-for-network.rules
 install -Dm644 %{SOURCE120} %{buildroot}%{_udevrulesdir}/64-aurora-trackpad-clicks.rules
+install -Dm644 %{SOURCE126} %{buildroot}%{_unitdir}/aurora-t6041-power.service
+# Wanted by sysinit.target itself: a preset would not reach Macs that
+# already have aurora-platform-core. ConditionFirmware skips other Macs.
+install -d %{buildroot}%{_unitdir}/sysinit.target.wants
+ln -s ../aurora-t6041-power.service %{buildroot}%{_unitdir}/sysinit.target.wants/aurora-t6041-power.service
 install -Dm644 %{SOURCE118} %{buildroot}%{_prefix}/lib/systemd/system.conf.d/90-aurora-reboot-watchdog.conf
 install -Dm644 %{SOURCE121} %{buildroot}%{_prefix}/lib/kdump/dracut.conf.d/99-zz-aurora.conf
 install -Dm644 %{SOURCE122} %{buildroot}%{_unitdir}/kdump.service.d/50-aurora-kdump.conf
@@ -217,6 +223,8 @@ fi
 %{_unitdir}/var-swap-swapfile2.swap.d/
 %dir %{_unitdir}/irqbalance.service.d
 %{_unitdir}/irqbalance.service.d/50-aurora-irqbalance.conf
+%{_unitdir}/aurora-t6041-power.service
+%{_unitdir}/sysinit.target.wants/aurora-t6041-power.service
 %{_udevrulesdir}/61-aurora-dmi-id.rules
 %{_udevrulesdir}/62-aurora-gpu-render-only.rules
 %{_udevrulesdir}/63-aurora-wake-for-network.rules
@@ -245,6 +253,15 @@ fi
 %ghost %verify(not md5 size mode mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Sun Nov 15 2026 AxxzyWasTaken <axxzytte@gmail.com> - 44-40
+- M4 Max (T6041) power defaults (aurora-t6041-power.service): PCIe ASPM
+  policy powersupersave, so the Wi-Fi/Bluetooth and SD reader links use the
+  L1.1 and L1.2 substates both ends support, and no utilization floor for
+  realtime threads (kernel.sched_util_clamp_min_rt_default=0), so threaded
+  IRQs and PipeWire no longer run their CPU at its top clock. The unit is
+  skipped on every other Mac. Measured on a J616c running Arch; not tested
+  on a J614c or on Fedora.
+
 * Fri Nov 13 2026 Ryan Murray <ryan@aurorasilicon.org> - 44-39
 - aurora-platform-core requires aurora-wifi-firmware: the ESP's Wi-Fi
   firmware follows the installed macOS's, read from the macOS system volume
