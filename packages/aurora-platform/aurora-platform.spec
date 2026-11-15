@@ -3,7 +3,7 @@
 
 Name: aurora-platform
 Version: 44
-Release: 39%{?dist}
+Release: 40%{?dist}
 Summary: Aurora Apple Silicon hardware stack
 License: MIT
 URL: https://github.com/aurora-silicon/fedora-aurora
@@ -44,6 +44,7 @@ Source122: aurora-kdump.service.conf
 Source123: aurora-kdump-setup
 Source124: aurora-kdump-clock-module-setup.sh
 Source125: aurora-kdump-clock.sh
+Source126: 60-aurora-t6041-trackpad.quirks
 
 %description
 Aurora Apple Silicon hardware stack.
@@ -161,6 +162,7 @@ install -Dm755 %{SOURCE113} %{buildroot}%{_libexecdir}/aurora/aurora-ppd-config
 install -Dm755 %{SOURCE115} %{buildroot}%{_libexecdir}/aurora/aurora-wake-for-network
 install -Dm644 %{SOURCE116} %{buildroot}%{_udevrulesdir}/63-aurora-wake-for-network.rules
 install -Dm644 %{SOURCE120} %{buildroot}%{_udevrulesdir}/64-aurora-trackpad-clicks.rules
+install -Dm644 %{SOURCE126} %{buildroot}%{_datadir}/libinput/60-aurora-t6041-trackpad.quirks
 install -Dm644 %{SOURCE118} %{buildroot}%{_prefix}/lib/systemd/system.conf.d/90-aurora-reboot-watchdog.conf
 install -Dm644 %{SOURCE121} %{buildroot}%{_prefix}/lib/kdump/dracut.conf.d/99-zz-aurora.conf
 install -Dm644 %{SOURCE122} %{buildroot}%{_unitdir}/kdump.service.d/50-aurora-kdump.conf
@@ -221,6 +223,7 @@ fi
 %{_udevrulesdir}/62-aurora-gpu-render-only.rules
 %{_udevrulesdir}/63-aurora-wake-for-network.rules
 %{_udevrulesdir}/64-aurora-trackpad-clicks.rules
+%{_datadir}/libinput/60-aurora-t6041-trackpad.quirks
 %{_udevhwdbdir}/60-aurora-dmi-vendor.hwdb
 %{_prefix}/lib/systemd/system.conf.d/90-aurora-reboot-watchdog.conf
 %{_prefix}/lib/dracut/modules.d/91aurora-usb4/
@@ -245,6 +248,14 @@ fi
 %ghost %verify(not md5 size mode mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Sun Nov 15 2026 AxxzyWasTaken <axxzytte@gmail.com> - 44-40
+- Turn libinput's size-based palm detection off for the M4 Max MacBook Pro
+  trackpads (J614c, J616c; 60-aurora-t6041-trackpad.quirks). The kernel
+  reports their palms as MT_TOOL_PALM (linux#636), and a resting palm's
+  touch size (about 1060) is under the Apple MTP threshold of 1600, so the
+  threshold never caught it. Same as the J700 quirk. Tested on a J616c
+  running Arch; not on a J614c or on Fedora.
+
 * Fri Nov 13 2026 Ryan Murray <ryan@aurorasilicon.org> - 44-39
 - aurora-platform-core requires aurora-wifi-firmware: the ESP's Wi-Fi
   firmware follows the installed macOS's, read from the macOS system volume
