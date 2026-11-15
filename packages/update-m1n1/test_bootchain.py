@@ -1354,6 +1354,35 @@ class KernelTransactionTests(unittest.TestCase):
                 self.assertFalse(self.update('remove', self.DEFAULT).defer_remove())
                 self.assertFalse(self.record.exists())
 
+    def leave_record_of_a_downgrade(self):
+        # Erasing this updater runs its pre-transaction trigger but not its
+        # closing ones, so the record outlives the dnf process that wrote it.
+        self.begin()
+        (self.root / 'proc/4242/stat').unlink()
+        self.assertEqual(json.loads(self.record.read_text())['deferred'], [])
+
+    def test_a_record_left_by_a_downgrade_never_defers_a_later_kernel_install(self):
+        self.boot_setup()
+        self.leave_record_of_a_downgrade()
+        self.install(self.NEW, 9)
+        self.kernel_install('add', self.NEW)  # By hand: as a fresh install.
+        self.assert_trial_for(self.NEW)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.kernel_install('remove', self.NEW)  # By hand: acts at once.
+        self.assertNotIn('removed inside a package transaction', out.getvalue())
+        self.assertFalse(self.record.exists())
+        # GRUB's first entry is the previous default again, whose Stage 2 is live.
+        self.assert_no_trial()
+        self.assertEqual(os.readlink(self.link), f'dtb-{self.DEFAULT}')
+
+    def test_a_record_left_by_a_downgrade_is_cleared_without_a_refresh(self):
+        self.boot_setup()
+        self.leave_record_of_a_downgrade()
+        # The closing trigger of the updater installed again.
+        self.assertFalse(self.update().end_transaction())
+        self.assertFalse(self.record.exists())
+
     def test_without_a_transaction_process_nothing_is_recorded(self):
         self.boot_setup()
         for pid in ('', '1', '4242', 'x'):
