@@ -1,4 +1,4 @@
-%global commit be8d4cd130cff6f39377f7fa86341e6f37e57d26
+%global commit 9125b31475836ce0a6634df45b539c6d604f36a5
 %global krel %{version}-%{release}.aarch64
 %global debug_package %{nil}
 # modules_install signs every module (CONFIG_MODULE_SIG_ALL) after
@@ -14,7 +14,7 @@
 %global ctxr_execmem 1
 Name: kernel-aurora
 Version: 7.3.0
-Release: 39%{?dist}.aurora
+Release: 40%{?dist}.aurora
 Summary: Aurora kernel for Apple Silicon Macs
 License: GPL-2.0-only
 URL: https://github.com/aurora-silicon/linux
@@ -172,6 +172,13 @@ fi
 %{_docdir}/aurora-userpages/
 
 %changelog
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 7.3.0-40
+- Pin cand/7.3.0-40 9125b314, the MacBook Neo (J700) rig's release
+  candidate kernel (qualified on hardware first); 2 first-parent commits
+  after be8d4cd1:
+  - drm/asahi: g17: give back the pool pages of kept render graphs
+  - drm/asahi: g17: let a refused render take back idle render pools
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 7.3.0-39
 - Pin integration/aurora be8d4cd1, the MacBook Neo (J700) rig's release
   candidate kernel (qualified on hardware first); 5 first-parent commits
