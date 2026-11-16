@@ -20,7 +20,7 @@
 
 Name:          mutter
 Version:       51.1
-Release:       19%{?dist}.aurora
+Release:       20%{?dist}.aurora
 Summary:       Window and compositing manager based on Clutter
 
 # Automatically converted from old format: GPLv2+ - review is highly recommended.
@@ -78,6 +78,8 @@ Patch43:       0043-compositor-native-Decide-per-view-whether-to-tear.patch
 Patch44:       0044-kms-Support-asynchronous-page-flips.patch
 Patch45:       0045-onscreen-native-Flip-asynchronously-when-the-view-te.patch
 Patch46:       0046-tests-Add-tearing-control-tests.patch
+Patch47:       0047-wayland-activation-Add-honor-activation-focus-to-foc.patch
+Patch48:       0048-prefs-Default-check-alive-timeout-to-20-seconds.patch
 
 BuildRequires: cvt
 BuildRequires: desktop-file-utils
@@ -296,6 +298,17 @@ xvfb-run -a meson test -C %{_vpath_builddir} --no-rebuild --print-errorlogs --nu
 %{_libexecdir}/mutter-devkit
 
 %changelog
+* Tue Nov 17 2026 Ryan Murray <ryan@aurorasilicon.org> - 51.1-20.aurora
+- Add org.gnome.mutter honor-activation-focus (default true): an
+  xdg-activation token requested by the focused window activates and
+  raises its target even without a matching input serial, so links
+  opened from chat apps bring the browser to the front instead of a
+  "is ready" notification. Tokens from unfocused windows still only
+  demand attention.
+- Default org.gnome.mutter check-alive-timeout to 20000 ms so the "not
+  responding" dialog stays away during shader compilation and game
+  loading screens (0 still disables it).
+
 * Tue Nov 17 2026 Ryan Murray <ryan@aurorasilicon.org> - 51.1-19.aurora
 - Support tearing-control-v1 (wp_tearing_control_manager_v1): fullscreen
   games and other clients that ask for tearing (Vulkan immediate present
