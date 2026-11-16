@@ -20,7 +20,7 @@
 
 Name:          mutter
 Version:       51.1
-Release:       17%{?dist}.aurora
+Release:       18%{?dist}.aurora
 Summary:       Window and compositing manager based on Clutter
 
 # Automatically converted from old format: GPLv2+ - review is highly recommended.
@@ -67,6 +67,10 @@ Patch32:       0032-wayland-Add-the-wlr-output-management-unstable-v1-pr.patch
 Patch33:       0033-context-main-Allow-several-modes-per-virtual-monitor.patch
 Patch34:       0034-wayland-Implement-wlr-output-management-unstable-v1.patch
 Patch35:       0035-tests-Add-wlr-output-management-tests.patch
+Patch36:       0036-wayland-Add-the-wlr-screencopy-unstable-v1-protocol.patch
+Patch37:       0037-wayland-Implement-wlr-screencopy-unstable-v1.patch
+Patch38:       0038-wayland-screencopy-Capture-into-linux-dmabuf-buffers.patch
+Patch39:       0039-tests-Add-wlr-screencopy-tests.patch
 
 BuildRequires: cvt
 BuildRequires: desktop-file-utils
@@ -285,6 +289,16 @@ xvfb-run -a meson test -C %{_vpath_builddir} --no-rebuild --print-errorlogs --nu
 %{_libexecdir}/mutter-devkit
 
 %changelog
+* Tue Nov 17 2026 Ryan Murray <ryan@aurorasilicon.org> - 51.1-18.aurora
+- Support wlr-screencopy-unstable-v1 (zwlr_screencopy_manager_v1,
+  version 3) so screenshot, recording and color picker tools such as
+  grim, slurp + grim, wf-recorder and hyprpicker work: clients copy an
+  output, or a region of it, into a wl_shm (XRGB8888) or, on outputs
+  without a transform, a linux-dmabuf buffer, with optional cursor and
+  damage tracking. Gated by the new org.gnome.mutter.wayland
+  allow-screen-capture setting (on by default); Flatpak-sandboxed
+  clients are never offered it.
+
 * Tue Nov 17 2026 Ryan Murray <ryan@aurorasilicon.org> - 51.1-17.aurora
 - Support wlr-output-management-unstable-v1 (zwlr_output_manager_v1 v4),
   so wlr-randr, kanshi, way-displays and wdisplays can list the monitors
