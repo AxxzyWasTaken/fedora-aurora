@@ -20,7 +20,7 @@
 
 Name:          mutter
 Version:       51.1
-Release:       18%{?dist}.aurora
+Release:       19%{?dist}.aurora
 Summary:       Window and compositing manager based on Clutter
 
 # Automatically converted from old format: GPLv2+ - review is highly recommended.
@@ -71,6 +71,13 @@ Patch36:       0036-wayland-Add-the-wlr-screencopy-unstable-v1-protocol.patch
 Patch37:       0037-wayland-Implement-wlr-screencopy-unstable-v1.patch
 Patch38:       0038-wayland-screencopy-Capture-into-linux-dmabuf-buffers.patch
 Patch39:       0039-tests-Add-wlr-screencopy-tests.patch
+Patch40:       0040-wayland-Add-the-tearing-control-v1-protocol.patch
+Patch41:       0041-wayland-Implement-tearing-control-v1.patch
+Patch42:       0042-clutter-frame-clock-Add-a-tearing-mode.patch
+Patch43:       0043-compositor-native-Decide-per-view-whether-to-tear.patch
+Patch44:       0044-kms-Support-asynchronous-page-flips.patch
+Patch45:       0045-onscreen-native-Flip-asynchronously-when-the-view-te.patch
+Patch46:       0046-tests-Add-tearing-control-tests.patch
 
 BuildRequires: cvt
 BuildRequires: desktop-file-utils
@@ -289,6 +296,14 @@ xvfb-run -a meson test -C %{_vpath_builddir} --no-rebuild --print-errorlogs --nu
 %{_libexecdir}/mutter-devkit
 
 %changelog
+* Tue Nov 17 2026 Ryan Murray <ryan@aurorasilicon.org> - 51.1-19.aurora
+- Support tearing-control-v1 (wp_tearing_control_manager_v1): fullscreen
+  games and other clients that ask for tearing (Vulkan immediate present
+  mode) are presented with asynchronous page flips, without waiting for
+  vertical blank. New org.gnome.mutter async-tearing setting
+  (fullscreen-only by default, always, off). Surfaces that do not ask for
+  tearing are unchanged, and drivers without async page flips keep vsync.
+
 * Tue Nov 17 2026 Ryan Murray <ryan@aurorasilicon.org> - 51.1-18.aurora
 - Support wlr-screencopy-unstable-v1 (zwlr_screencopy_manager_v1,
   version 3) so screenshot, recording and color picker tools such as
