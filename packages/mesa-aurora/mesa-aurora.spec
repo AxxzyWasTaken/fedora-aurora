@@ -1,8 +1,8 @@
-%global commit bbad52187b6086375806e2430f605fbe70c1c78d
+%global commit d4ad4a4dce6d1d23ecd897d6d73fadf9ab618614
 %global debug_package %{nil}
 Name: mesa-aurora
 Version: 26.3.0
-Release: 28%{?dist}.aurora
+Release: 30%{?dist}.aurora
 Summary: Aurora Asahi OpenGL and Vulkan drivers
 License: MIT
 URL: https://github.com/aurora-silicon/mesa
@@ -200,6 +200,43 @@ strings %{buildroot}%{_libdir}/libvulkan_asahi.so | grep -F "Mesa " | grep -F "(
 %{_libdir}/libRusticlOpenCL.so
 
 %changelog
+* Sun Nov 15 2026 Diljit Singh <hey@djdev.me> - 26.3.0-30
+- Pin aurora-silicon/mesa cts/b11-rc30 d4ad4a4dce6 (3 first-parent commits since 3b511dc1592):
+  - st/mesa: reject links mixing GLSL and SPIR-V shaders in either order
+    (d4ad4a4dce6)
+  - mesa: a SPIR-V shader given GLSL source is no longer compiled
+    (70018200ff9)
+  - mesa: don't let a compile free shader state another context is linking
+    (737fc35f257)
+
+* Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-29
+- Pin aurora-silicon/mesa cts/b10-rc29 3b511dc1592 (17 first-parent commits since bbad52187b6):
+  - hk: G17P: place large unlinked vertex shaders' varyings when linking
+    (3b511dc1592)
+  - Neo b9 candidate = Mesa -29 release tree: aurora-wip 5fe9c10c6f9 +
+    pr346 pr351 (3b3e6a2e082)
+  - mesa#342 agx: G17P ray queries: skip the sweep for threads that
+    launched nothing, store launch state once per thread
+  - mesa#349 asahi: select native RT capabilities without an environment
+    switch
+  - mesa#348 asahi: enable implemented GPU paths without feature opt-ins
+  - mesa#340 hk: alternate the G17P buffer fill's sweep direction
+  - mesa#339 hk: upload plain G17P tiled images in memory order
+  - mesa#300 hk: VK_EXT_attachment_feedback_loop_dynamic_state
+  - mesa#319 agx, hk: M4 Pro compute fixes (pack_64_4x16, f32 rsqrt
+    widening, cooperative matrix default on G17P)
+  - mesa#338 hk: advertise VK_EXT_nested_command_buffer on G17S
+  - mesa#341 hk: encode only the leaf jobs in AGX3 AS updates
+  - mesa#335 hk: G17P: skip the mesh row decode for grids that fit one
+    launch
+  - mesa#336 Reapply #327 and #328 (the AS CTS crash is pre-existing)
+  - mesa#334 Revert #328 and #327 pending an AS CTS crash attribution
+  - mesa#320 hk: fix stores to one-layer array views of compressed images
+    on M5
+  - mesa#328 vulkan, hk: use the shuffle neighbour search for small H-PLOC
+    builds
+  - mesa#327 hk: unroll the AGX3 envelope's descriptor loops
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 26.3.0-28
 - Pin aurora-silicon/mesa aurora-wip bbad52187b6 (20 first-parent commits since f54acc022c8):
   - mesa#315 hk: mesh and task shaders by default on G17P

@@ -14,7 +14,7 @@
 %global ctxr_execmem 1
 Name: kernel-aurora
 Version: 7.3.0
-Release: 40%{?dist}.aurora
+Release: 41%{?dist}.aurora
 Summary: Aurora kernel for Apple Silicon Macs
 License: GPL-2.0-only
 URL: https://github.com/aurora-silicon/linux
@@ -52,6 +52,10 @@ Conflicts: aurora-fido < 0.2.0-2
 # https://github.com/aurora-silicon/aura/pull/75); under an older Stage 2
 # the speakers stay off.
 Requires: aura >= 1.0.0~b12
+# apple-avd loads apple/avd-fw-v*.bin from /usr/lib/firmware. Its queued
+# transport needs queue ABI 2 with per-image codec VP pools (avd-fw 6756ca99,
+# packaged as 0.1-3); without the images the decoder does not probe.
+Requires: avd-fw >= 0.1-3
 Provides: kernel-uname-r = %{krel}
 %if %{ctxr_execmem}
 Provides: aurora-ctxr-execmem
@@ -172,6 +176,12 @@ fi
 %{_docdir}/aurora-userpages/
 
 %changelog
+* Mon Nov 16 2026 Ryan Murray <ryan@aurorasilicon.org> - 7.3.0-41
+- Require avd-fw 0.1-3 or later, so a kernel installed or upgraded on its
+  own always has the video decoder firmware it loads (queue ABI 2 with
+  per-image codec VP pools). Without it the decoder fails to probe with
+  -ENOENT and its power domains never reach sync_state.
+
 * Sat Nov 14 2026 Diljit Singh <hey@djdev.me> - 7.3.0-40
 - Pin cand/7.3.0-40 9125b314, the MacBook Neo (J700) rig's release
   candidate kernel (qualified on hardware first); 2 first-parent commits
