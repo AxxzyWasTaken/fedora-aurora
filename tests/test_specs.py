@@ -583,6 +583,24 @@ class SpecTests(unittest.TestCase):
         self.assertRegex(text, r'(?m)^Source\d+: 64-aurora-trackpad-clicks\.rules$')
         core_files = text.split('%files core', 1)[1].split('%files selinux', 1)[0]
         self.assertIn('%{_udevrulesdir}/64-aurora-trackpad-clicks.rules', core_files)
+    def test_t6041_trackpads_take_palms_from_the_kernel(self):
+        # hid-magicmouse reports T6041 palms as MT_TOOL_PALM; libinput's
+        # Apple MTP size threshold is off on those two MacBook Pros only.
+        d = ROOT / 'packages' / 'aurora-platform'
+        quirks = configparser.ConfigParser(interpolation=None)
+        quirks.optionxform = str
+        quirks.read_string((d / '60-aurora-t6041-trackpad.quirks').read_text())
+        self.assertEqual(sorted(quirks[s]['MatchDeviceTree'] for s in quirks.sections()),
+                         ['*j614c*', '*j616c*'])
+        for section in quirks.sections():
+            with self.subTest(section=section):
+                self.assertEqual(dict(quirks[section]), {
+                    'MatchUdevType': 'touchpad', 'MatchName': 'Apple*MTP*', 'MatchVendor': '0x05AC',
+                    'MatchDeviceTree': quirks[section]['MatchDeviceTree'], 'AttrPalmSizeThreshold': '0'})
+        text = (d / 'aurora-platform.spec').read_text()
+        self.assertRegex(text, r'(?m)^Source\d+: 60-aurora-t6041-trackpad\.quirks$')
+        core_files = text.split('%files core', 1)[1].split('%files kdump', 1)[0]
+        self.assertIn('%{_datadir}/libinput/60-aurora-t6041-trackpad.quirks', core_files)
     def test_t6041_power_defaults_apply_on_the_t6041_only(self):
         d = ROOT / 'packages' / 'aurora-platform'
         unit = configparser.ConfigParser(interpolation=None, strict=False)

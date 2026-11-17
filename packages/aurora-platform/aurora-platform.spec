@@ -3,7 +3,7 @@
 
 Name: aurora-platform
 Version: 44
-Release: 40%{?dist}
+Release: 41%{?dist}
 Summary: Aurora Apple Silicon hardware stack
 License: MIT
 URL: https://github.com/aurora-silicon/fedora-aurora
@@ -44,7 +44,8 @@ Source122: aurora-kdump.service.conf
 Source123: aurora-kdump-setup
 Source124: aurora-kdump-clock-module-setup.sh
 Source125: aurora-kdump-clock.sh
-Source126: aurora-t6041-power.service
+Source126: 60-aurora-t6041-trackpad.quirks
+Source127: aurora-t6041-power.service
 
 %description
 Aurora Apple Silicon hardware stack.
@@ -162,7 +163,8 @@ install -Dm755 %{SOURCE113} %{buildroot}%{_libexecdir}/aurora/aurora-ppd-config
 install -Dm755 %{SOURCE115} %{buildroot}%{_libexecdir}/aurora/aurora-wake-for-network
 install -Dm644 %{SOURCE116} %{buildroot}%{_udevrulesdir}/63-aurora-wake-for-network.rules
 install -Dm644 %{SOURCE120} %{buildroot}%{_udevrulesdir}/64-aurora-trackpad-clicks.rules
-install -Dm644 %{SOURCE126} %{buildroot}%{_unitdir}/aurora-t6041-power.service
+install -Dm644 %{SOURCE126} %{buildroot}%{_datadir}/libinput/60-aurora-t6041-trackpad.quirks
+install -Dm644 %{SOURCE127} %{buildroot}%{_unitdir}/aurora-t6041-power.service
 # Wanted by sysinit.target itself: a preset would not reach Macs that
 # already have aurora-platform-core. ConditionFirmware skips other Macs.
 install -d %{buildroot}%{_unitdir}/sysinit.target.wants
@@ -229,6 +231,7 @@ fi
 %{_udevrulesdir}/62-aurora-gpu-render-only.rules
 %{_udevrulesdir}/63-aurora-wake-for-network.rules
 %{_udevrulesdir}/64-aurora-trackpad-clicks.rules
+%{_datadir}/libinput/60-aurora-t6041-trackpad.quirks
 %{_udevhwdbdir}/60-aurora-dmi-vendor.hwdb
 %{_prefix}/lib/systemd/system.conf.d/90-aurora-reboot-watchdog.conf
 %{_prefix}/lib/dracut/modules.d/91aurora-usb4/
@@ -253,7 +256,7 @@ fi
 %ghost %verify(not md5 size mode mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
-* Sun Nov 15 2026 AxxzyWasTaken <axxzytte@gmail.com> - 44-40
+* Sun Nov 15 2026 AxxzyWasTaken <axxzytte@gmail.com> - 44-41
 - M4 Max (T6041) power defaults (aurora-t6041-power.service): PCIe ASPM
   policy powersupersave, so the Wi-Fi/Bluetooth and SD reader links use the
   L1.1 and L1.2 substates both ends support, and no utilization floor for
@@ -261,6 +264,14 @@ fi
   IRQs and PipeWire no longer run their CPU at its top clock. The unit is
   skipped on every other Mac. Measured on a J616c running Arch; not tested
   on a J614c or on Fedora.
+
+* Sun Nov 15 2026 AxxzyWasTaken <axxzytte@gmail.com> - 44-40
+- Turn libinput's size-based palm detection off for the M4 Max MacBook Pro
+  trackpads (J614c, J616c; 60-aurora-t6041-trackpad.quirks). The kernel
+  reports their palms as MT_TOOL_PALM (linux#636), and a resting palm's
+  touch size (about 1060) is under the Apple MTP threshold of 1600, so the
+  threshold never caught it. Same as the J700 quirk. Tested on a J616c
+  running Arch; not on a J614c or on Fedora.
 
 * Fri Nov 13 2026 Ryan Murray <ryan@aurorasilicon.org> - 44-39
 - aurora-platform-core requires aurora-wifi-firmware: the ESP's Wi-Fi
